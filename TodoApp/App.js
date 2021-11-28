@@ -38,6 +38,10 @@ function App() {
     })
   }
 
+  const onRemove = (id) => {
+    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id))
+  }
+
   return (
     <SafeAreaProvider>
       <SafeAreaView edges={["bottom"]} style={styles.block}>
@@ -51,7 +55,7 @@ function App() {
           {todos.length === 0 ? (
             <Empty />
           ) : (
-            <TodoList todos={todos} onToggle={onToggle} />
+            <TodoList todos={todos} onToggle={onToggle} onRemove={onRemove} />
           )}
           <AddTodo onInsert={onInsert} />
         </KeyboardAvoidingView>
