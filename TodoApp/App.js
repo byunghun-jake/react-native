@@ -30,6 +30,14 @@ function App() {
     })
   }
 
+  const onToggle = (id) => {
+    setTodos((prevTodos) => {
+      return prevTodos.map((todo) =>
+        todo.id === id ? { ...todo, done: !todo.done } : todo
+      )
+    })
+  }
+
   return (
     <SafeAreaProvider>
       <SafeAreaView edges={["bottom"]} style={styles.block}>
@@ -40,7 +48,11 @@ function App() {
           style={styles.avoid}
         >
           <DateHead date={today} />
-          {todos.length === 0 ? <Empty /> : <TodoList todos={todos} />}
+          {todos.length === 0 ? (
+            <Empty />
+          ) : (
+            <TodoList todos={todos} onToggle={onToggle} />
+          )}
           <AddTodo onInsert={onInsert} />
         </KeyboardAvoidingView>
       </SafeAreaView>
