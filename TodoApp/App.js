@@ -1,10 +1,12 @@
-import React, { useState } from "react"
+import AsyncStorage from "@react-native-community/async-storage"
+import React, { useEffect, useState } from "react"
 import { KeyboardAvoidingView, Platform, StyleSheet } from "react-native"
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context"
 import AddTodo from "./components/AddTodo"
 import DateHead from "./components/DateHead"
 import Empty from "./components/Empty"
 import TodoList from "./components/TodoList"
+import todosStorage from "./storages/todosStorage"
 
 const DUMMY_TODOS = [
   { id: 1, text: "작업환경 설정", done: true },
@@ -41,6 +43,19 @@ function App() {
   const onRemove = (id) => {
     setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id))
   }
+
+  useEffect(() => {
+    todosStorage.get().then(setTodos).catch(console.error)
+  }, [])
+
+  useEffect(() => {
+    // try {
+    //   todosStorage.set(todos)
+    // } catch (error) {
+    //   console.log(error)
+    // }
+    todosStorage.set(todos).catch(console.error)
+  }, [todos])
 
   return (
     <SafeAreaProvider>
