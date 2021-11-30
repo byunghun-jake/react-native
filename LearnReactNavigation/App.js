@@ -1,80 +1,38 @@
 import React from "react"
-import { NavigationContainer } from "@react-navigation/native"
-import { createDrawerNavigator } from "@react-navigation/drawer"
-import { View, Text, Button } from "react-native"
-import { SafeAreaView } from "react-native-safe-area-context"
-import { TouchableOpacity } from "react-native-gesture-handler"
+import {
+  NavigationContainer,
+  getFocusedRouteNameFromRoute,
+} from "@react-navigation/native"
+import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import MainScreen from "./screens/MainScreen"
+import DetailScreen from "./screens/DetailScreen"
 
-const Drawer = createDrawerNavigator()
+const Stack = createNativeStackNavigator()
 
-function HomeScreen({ navigation }) {
-  return (
-    <View>
-      <Text>Home</Text>
-      <Button title="Drawer 열기" onPress={() => navigation.openDrawer()} />
-      <Button
-        title="Setting 열기"
-        onPress={() => navigation.navigate("Setting")}
-      />
-    </View>
-  )
-}
-
-function SettingScreen({ navigation }) {
-  return (
-    <View>
-      <Text>Setting</Text>
-      <Button title="뒤로가기" onPress={() => navigation.goBack()} />
-    </View>
-  )
+function getHeaderTitle(route) {
+  const routeName = getFocusedRouteNameFromRoute(route) ?? "Home"
+  const routeMap = {
+    Home: "홈",
+    Search: "검색",
+    Notification: "알림",
+    Message: "메시지",
+  }
+  return routeMap[routeName]
 }
 
 function App() {
   return (
     <NavigationContainer>
-      <Drawer.Navigator
-        initialRouteName="Home"
-        drawerPosition="left"
-        backBehavior="history"
-        drawerContent={({ navigation }) => (
-          <SafeAreaView>
-            <Text>Custom Drawer</Text>
-            <Button
-              title="Drawer 닫기"
-              onPress={() => navigation.closeDrawer()}
-            />
-          </SafeAreaView>
-        )}
-        screenOptions={({ navigation }) => ({
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.openDrawer()}>
-              <Text>Left</Text>
-            </TouchableOpacity>
-          ),
-        })}
-        // screenOptions={{
-        //   drawerActiveBackgroundColor: "#fb8c00",
-        //   drawerActiveTintColor: "white",
-        //   drawerLabelStyle: {
-        //     fontWeight: "bold",
-        //   },
-        // }}
-      >
-        <Drawer.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            title: "홈",
-          }}
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Main"
+          component={MainScreen}
+          options={({ route }) => ({
+            title: getHeaderTitle(route),
+          })}
         />
-        <Drawer.Screen
-          name="Setting"
-          component={SettingScreen}
-          options={{
-            title: "설정",
-          }}
-        />
-      </Drawer.Navigator>
+        <Stack.Screen name="Detail" component={DetailScreen} />
+      </Stack.Navigator>
     </NavigationContainer>
   )
 }
